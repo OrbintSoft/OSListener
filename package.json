@@ -1,0 +1,12 @@
+{
+    "engines": {
+        "node": ">=16"
+    },
+    "scripts": {
+        "compileTs": "tsc src/OSEventListener.ts"
+    },
+    "devDependencies": {
+        "typescript": "^4.5.4",
+        "eslint": "^8.5.0"
+    }
+}

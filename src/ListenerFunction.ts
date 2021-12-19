@@ -1,0 +1,1 @@
+export type ListenerFunction = (sender: any, data: any) => void;
