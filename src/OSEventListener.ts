@@ -22,7 +22,7 @@ export class OSEventListener {
      * @returns {string}
      */
     get name() : string {
-        return this.name;
+        return this.#name;
     }
 
     /**
