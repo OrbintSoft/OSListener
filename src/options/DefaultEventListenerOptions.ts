@@ -1,6 +1,6 @@
 import { NullLogger } from "../utilities/NullLogger";
-import { IEventListenerOptions } from "./IEventListenerOptions";
+import { EventListenerOptions } from "./EventListenerOptions";
 
-export const DefaultEventListenerOptions: IEventListenerOptions = {
+export const DefaultEventListenerOptions: EventListenerOptions = {
     logger: console || NullLogger
 }

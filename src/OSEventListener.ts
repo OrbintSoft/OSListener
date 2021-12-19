@@ -1,16 +1,17 @@
 import { DefaultSubscribeOptions } from "./options/DefaultSubscribeOptions";
-import { ISubscribeOptions } from "./options/ISubscribeOptions";
+import { SubscribeOptions } from "./options/SubscribeOptions";
 import { ListenerFunction } from "./ListenerFunction";
-import { ILogger } from "./utilities/ILogger";
-import { IEventListenerOptions } from "./options/IEventListenerOptions";
+import { Logger } from "./utilities/Logger";
+import { EventListenerOptions } from "./options/EventListenerOptions";
 import { DefaultEventListenerOptions } from "./options/DefaultEventListenerOptions";
-import { IUnsubscribeOptions } from "./options/InUnsubscribeOptions";
+import { UnsubscribeOptions } from "./options/UnsubscribeOptions";
 import { DefaultUnsubscribeOptions } from "./options/DefaultUnsubscribeOptions";
 import { NullLogger } from "./utilities/NullLogger";
-import { ISubscribeWithKeyOptions } from "./options/ISubscribeWithKeyOptions";
+import { SubscribeWithKeyOptions } from "./options/SubscribeWithKeyOptions";
 import { OptionsMapper } from "./options/OptionsMapper";
 import { DefaultSubscribeWithKeyOptions } from "./options/DefaultSubscribeWithKeyOptions";
 import { DOMEvent } from "./DOMEvent";
+import { UnbindToDOMEventOptions } from "./options/UnbindToDOMEventOptions";
 
 /**
  * @author Stefano Balzarotti
@@ -20,7 +21,7 @@ import { DOMEvent } from "./DOMEvent";
 export class OSEventListener {    
     #name : string = '';
     #listeners: ListenerFunction[] = [];
-    #logger: ILogger = NullLogger;
+    #logger: Logger = NullLogger;
     #firstDispatchOccurred: boolean = false;
     #keyMappedListeners: Map<string, ListenerFunction[]> = new Map(); 
     #boundedDomEvents: DOMEvent[] = [];
@@ -37,7 +38,7 @@ export class OSEventListener {
      * @param {string} name the name of the event 
      * @param {IEventListenerOptions} options
       */
-    constructor(name: string, options: IEventListenerOptions = DefaultEventListenerOptions){
+    constructor(name: string, options: EventListenerOptions = DefaultEventListenerOptions){
         options = OptionsMapper.map(options, DefaultEventListenerOptions);
         this.#logger = options.logger; 
         this.#name = name;
@@ -45,17 +46,17 @@ export class OSEventListener {
 
     /**
      * @param {ListenerFunction} fn the function you want subscribe to the event
-     * @param {ISubscribeOptions} [options=DefaultSubscribeOptions] 
+     * @param {SubscribeOptions} [options=DefaultSubscribeOptions] 
      * @returns {boolean} function successfully subscribed
      */
-    subscribe(fn: ListenerFunction, options: ISubscribeOptions = DefaultSubscribeOptions): boolean {
+    subscribe(fn: ListenerFunction, options: SubscribeOptions = DefaultSubscribeOptions): boolean {
         options = OptionsMapper.map(options, DefaultSubscribeOptions);
         if (!this.#listeners.includes(fn) || options.allowMultipleSubscribeSameFunction){
             this.#listeners.push(fn);
             return true;
         } else {
             const errorMessage = 'An attempt to subscribe multiple times the same function occurred';
-            if (options.canThrowError){
+            if (options.shouldThrowErrors){
                 throw new Error(errorMessage);                
             } else {
                 this.#logger.warn(errorMessage);
@@ -66,10 +67,10 @@ export class OSEventListener {
 
     /**
      * @param {ListenerFunction} fn the function you want unsubscribe from the event
-     * @param {IUnsubscribeOptions} [options] 
+     * @param {UnsubscribeOptions} [options] 
      * @returns {boolean} function successfully unsubscribed
      */
-    unsubscribe(fn: ListenerFunction, options: IUnsubscribeOptions = DefaultUnsubscribeOptions) :boolean {
+    unsubscribe(fn: ListenerFunction, options: UnsubscribeOptions = DefaultUnsubscribeOptions) :boolean {
         options = OptionsMapper.map(options, DefaultUnsubscribeOptions);
         let i = -1;
         let found = false;
@@ -87,7 +88,7 @@ export class OSEventListener {
             return true;
         } else {
             const errorMessage = 'An attempt to unsubscribe a non sunscribed function occurred';
-            if (options.canThrowError){
+            if (options.shouldThrowErrors){
                 throw new Error(errorMessage);                
             } else {
                 this.#logger.warn(errorMessage);
@@ -136,17 +137,17 @@ export class OSEventListener {
     /**
      * @param {ListenerFunction} fn 
      * @param {string} key 
-     * @param {ISubscribeWithKeyOptions} [options = DefaultSubscribeWithKeyOptions]
+     * @param {SubscribeWithKeyOptions} [options = DefaultSubscribeWithKeyOptions]
      * @returns {boolean} if subscribed successfully
      */
-    subscribeWithKey(fn: ListenerFunction, key: string, options: ISubscribeWithKeyOptions = DefaultSubscribeWithKeyOptions) : boolean{
+    subscribeWithKey(fn: ListenerFunction, key: string, options: SubscribeWithKeyOptions = DefaultSubscribeWithKeyOptions) : boolean{
         options = OptionsMapper.map(options, DefaultSubscribeWithKeyOptions);
         const mappedListeners = this.#keyMappedListeners.get(key) || [];
         if (mappedListeners.length === 0 || options.allowMultipleListernersPerKey){
             mappedListeners.push(fn);
         } else {
             const message = 'An attempt to add a listener with same key occurred';
-            if (options.canThrowError){
+            if (options.shouldThrowErrors){
                 throw Error(message);
             } else {
                 this.#logger.error(message);
@@ -176,7 +177,7 @@ export class OSEventListener {
      * @param {EventTarget} element 
      * @param {string} eventName 
      * @param {AddEventListenerOptions} [options]
-     * @returns {boolean} if event has been bounded successfully
+     * @returns {boolean} true if event has been bounded successfully
      */
     bindToDOMEvent(element: EventTarget, eventName: string, options : AddEventListenerOptions = null): boolean{
         const self = this;
@@ -207,14 +208,16 @@ export class OSEventListener {
      * @param {EventTarget} element 
      * @param {string} eventName 
      * @param {EventListenerOptions} [options] 
+     * @returns {boolean} true if event has been unbounded successfully
      */
-    unbindDOMEvent(element: EventTarget, eventName: string, options : EventListenerOptions = null): boolean{
+    unbindDOMEvent(element: EventTarget, eventName: string, options : UnbindToDOMEventOptions = null): boolean{
         const i = this.#boundedDomEvents.findIndex(bde => bde.eventName === eventName && bde.element === element);
         if (i !== -1){
             const boundedEvent = this.#boundedDomEvents[i];
             element.removeEventListener(eventName, boundedEvent.eventHandler, options);
             this.#boundedDomEvents = this.#boundedDomEvents.splice(i, 1);
+            return true;
         }        
         return false;
-    }    
+    }
 } 

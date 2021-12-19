@@ -1,6 +1,6 @@
-import { ISubscribeOptions } from "./ISubscribeOptions";
+import { SubscribeOptions } from "./SubscribeOptions";
 
-export const DefaultSubscribeOptions : ISubscribeOptions = {
-    canThrowError: false,
+export const DefaultSubscribeOptions : SubscribeOptions = {
+    shouldThrowErrors: false,
     allowMultipleSubscribeSameFunction: false
 }

@@ -1,6 +1,6 @@
-import { IUnsubscribeOptions } from "./InUnsubscribeOptions";
+import { UnsubscribeOptions } from "./UnsubscribeOptions";
 
-export const DefaultUnsubscribeOptions: IUnsubscribeOptions = {
-    canThrowError: false,
+export const DefaultUnsubscribeOptions: UnsubscribeOptions = {
+    shouldThrowErrors: false,
     removeOnlyFirstOccurrence: true
 }

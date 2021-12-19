@@ -1,6 +1,6 @@
-import { ILogger } from "./ILogger";
+import { Logger } from "./Logger";
 
-export const NullLogger: ILogger = {
+export const NullLogger: Logger = {
     debug: function (...data: any[]): void {        
     },
     error: function (...data: any[]): void {

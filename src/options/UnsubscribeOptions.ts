@@ -1,8 +1,6 @@
-export interface IUnsubscribeOptions {
-    /**
-     * throw errors in case unsubscribe fails
-     */
-    canThrowError: boolean
+import { ErrorThrowable } from "./ErrorThrowable";
+
+export interface UnsubscribeOptions extends ErrorThrowable {
     /**
      * if true remove only the first occurence otherwise all occurrences of same subscribed function 
      */

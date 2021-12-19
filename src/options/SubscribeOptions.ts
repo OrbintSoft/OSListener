@@ -1,8 +1,6 @@
-export interface ISubscribeOptions {
-    /**
-     * throw errors in case subscribe fails
-     */
-    canThrowError: boolean
+import { ErrorThrowable } from "./ErrorThrowable";
+
+export interface SubscribeOptions extends ErrorThrowable {
     /**
      * allows to subscribe multiple times the same function
      */

@@ -1,8 +1,8 @@
 import { DefaultSubscribeOptions } from "./DefaultSubscribeOptions";
-import { ISubscribeWithKeyOptions } from "./ISubscribeWithKeyOptions";
+import { SubscribeWithKeyOptions } from "./SubscribeWithKeyOptions";
 
-export const DefaultSubscribeWithKeyOptions: ISubscribeWithKeyOptions = {
+export const DefaultSubscribeWithKeyOptions: SubscribeWithKeyOptions = {
     allowMultipleListernersPerKey: true,
-    canThrowError: DefaultSubscribeOptions.canThrowError,
+    shouldThrowErrors: DefaultSubscribeOptions.shouldThrowErrors,
     allowMultipleSubscribeSameFunction: DefaultSubscribeOptions.allowMultipleSubscribeSameFunction
 };

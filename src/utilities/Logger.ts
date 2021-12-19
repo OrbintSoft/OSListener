@@ -1,4 +1,4 @@
-export interface ILogger{
+export interface Logger{
     debug(...data: any[]): void;
     error(...data: any[]): void;
     info(...data: any[]): void;
