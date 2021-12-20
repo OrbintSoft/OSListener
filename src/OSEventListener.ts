@@ -10,8 +10,6 @@ import { NullLogger } from "./utilities/NullLogger";
 import { SubscribeWithKeyOptions } from "./options/SubscribeWithKeyOptions";
 import { OptionsMapper } from "./options/OptionsMapper";
 import { DefaultSubscribeWithKeyOptions } from "./options/DefaultSubscribeWithKeyOptions";
-import { DOMEvent } from "./DOMEvent";
-import { UnbindToDOMEventOptions } from "./options/UnbindToDOMEventOptions";
 
 /**
  * @author Stefano Balzarotti
@@ -24,7 +22,6 @@ export class OSEventListener {
     #logger: Logger = NullLogger;
     #firstDispatchOccurred: boolean = false;
     #keyMappedListeners: Map<string, ListenerFunction[]> = new Map(); 
-    #boundedDomEvents: DOMEvent[] = [];
 
     /**
      * The event name
@@ -32,6 +29,10 @@ export class OSEventListener {
      */
     get name() : string {
         return this.#name;
+    }
+
+    protected get logger(): Logger {
+        return this.#logger;
     }
 
     /**
@@ -98,19 +99,19 @@ export class OSEventListener {
     }
 
     /**
-     * @returns {Promise<void>}
+     * @returns {Promise<unknown>}
      */
-    waitUntilFirstDispatchAsync() : Promise<void> {        
+    waitUntilFirstDispatchAsync(options = null) : Promise<unknown> {        
         const self = this;
         if (this.#firstDispatchOccurred){
             return Promise.resolve();
         } else {
             let listener: ListenerFunction = null;
             
-            const promise = new Promise<void>((resolve, reject) => {
+            const promise = new Promise<unknown>((resolve, reject) => {
                 listener = (sender, data) => {
                     self.unsubscribe(listener);
-                    resolve();
+                    resolve(null);
                 }
                 self.subscribe(listener);                                
             });
@@ -171,53 +172,5 @@ export class OSEventListener {
             found = true;
         }
         return found;
-    }
-
-    /**
-     * @param {EventTarget} element 
-     * @param {string} eventName 
-     * @param {AddEventListenerOptions} [options]
-     * @returns {boolean} true if event has been bounded successfully
-     */
-    bindToDOMEvent(element: EventTarget, eventName: string, options : AddEventListenerOptions = null): boolean{
-        const self = this;
-        if (this.#boundedDomEvents.findIndex(bde => bde.eventName === eventName && bde.element === element) === -1){
-            const fn = function (event: Event) {
-                const sender = this;
-                const data = {
-                    event: event,
-                    args: arguments
-                };
-                self.dispatch(sender, data);
-            };
-            this.#boundedDomEvents.push({
-                element: element,
-                eventName: eventName,
-                eventHandler: fn
-            });
-            element.addEventListener(eventName, fn, options);
-            return true;
-        } else{
-            const errorMessage = 'An attempt to bound an already bounded dom event occurred';
-            this.#logger.warn(errorMessage);
-            return false;
-        }
-    }
-
-    /**
-     * @param {EventTarget} element 
-     * @param {string} eventName 
-     * @param {EventListenerOptions} [options] 
-     * @returns {boolean} true if event has been unbounded successfully
-     */
-    unbindDOMEvent(element: EventTarget, eventName: string, options : UnbindToDOMEventOptions = null): boolean{
-        const i = this.#boundedDomEvents.findIndex(bde => bde.eventName === eventName && bde.element === element);
-        if (i !== -1){
-            const boundedEvent = this.#boundedDomEvents[i];
-            element.removeEventListener(eventName, boundedEvent.eventHandler, options);
-            this.#boundedDomEvents = this.#boundedDomEvents.splice(i, 1);
-            return true;
-        }        
-        return false;
-    }
+    }    
 } 
