@@ -1,3 +1,6 @@
+/**
+ * Utility to map default properties
+ */
 export class OptionsMapper {
     static map<T>(options: unknown, defaultOptions: T): T{
         if (defaultOptions === options){

@@ -1,1 +1,1 @@
-export type ListenerFunction = (sender: any, data: any) => void;
+export type ListenerFunction = ((sender: any, data: any) => void) & { _keyedOsEvent?: string};

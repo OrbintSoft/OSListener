@@ -6,8 +6,9 @@
         "compileTs": "tsc src/OSEventListener.ts"
     },
     "devDependencies": {
-        "typescript": "^4.5.4",
-        "eslint": "^8.5.0"
+        "eslint": "^8.5.0",
+        "mocha": "^9.1.3",
+        "typescript": "^4.5.4"
     },
     "dependencies": {
         "@types/jquery": "^3.5.10"
