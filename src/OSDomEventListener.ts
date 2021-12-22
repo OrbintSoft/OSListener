@@ -30,16 +30,16 @@ export class OSDomEventListener extends OSEventListener{
      * @returns {boolean} true if event has been bounded successfully
      */
      bindToDOMEvent(element: EventTarget, eventName: string, options : BindToDOMEventOptions = DefaultBindToDOMEventsOptions): boolean{
-        const self = this;
+        const myself = this;
         options = OptionsMapper.map(options, DefaultBindToDOMEventsOptions);
         if (this.#boundedDomEvents.findIndex(bde => bde.eventName === eventName && bde.element === element) === -1){
-            const fn = function (event: Event) {
-                const sender = this;
+            const fn = function (event: Event, ...args: any[]) {
+                const sender = element;
                 const data = {
                     event: event,
-                    args: arguments
+                    otherArgs: args
                 };
-                self.dispatch(sender, data);
+                myself.dispatch(sender, data);
             };
             this.#boundedDomEvents.push({
                 element: element,
@@ -51,7 +51,7 @@ export class OSDomEventListener extends OSEventListener{
         } else{
             const errorMessage = 'An attempt to bound an already bounded dom event occurred';
             if (options.shouldThrowErrors){
-
+                throw Error(errorMessage);
             } else {
                 this.logger.warn(errorMessage);
                 return false;

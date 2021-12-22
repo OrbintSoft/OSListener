@@ -77,7 +77,7 @@ export class OSEventListener {
     
 
     #removeFunctionFromKeyMap(fn: ListenerFunction, options: UnsubscribeOptions){
-        if (fn._keyedOsEvent){
+        if (typeof (fn._keyedOsEvent) === 'string'){
             const possibleFns = this.#keyMappedListeners.get(fn._keyedOsEvent);
             if (possibleFns){
                 let i = -1;
@@ -159,7 +159,7 @@ export class OSEventListener {
      * @returns {Promise<unknown>}
      */
     waitUntilFirstDispatchAsync(options: WaitUntilFirstDispatchOptions = DefaultWaitUntilFirstDispatchOptions) : Promise<unknown> {        
-        const self = this;
+        const myself = this;
         options = OptionsMapper.map(options, DefaultWaitUntilFirstDispatchOptions);
         if (options.resetFirstDispatchBefore){
             this.resetFirstDispatch();
@@ -170,17 +170,17 @@ export class OSEventListener {
             }
             return Promise.resolve(this.#latestData);
         } else {
-            let listener: ListenerFunction = null;
+            let listener: ListenerFunction;
             
             const promise = new Promise<unknown>((resolve, reject) => {
                 listener = (sender, data) => {
-                    self.unsubscribe(listener);
+                    myself.unsubscribe(listener);
                     if (options.resetFirstDispatchAfter){
-                        self.resetFirstDispatch();
+                        myself.resetFirstDispatch();
                     }
                     resolve(data);
                 }
-                if (!self.subscribe(listener)){
+                if (!myself.subscribe(listener)){
                     reject();
                 }                                
             });

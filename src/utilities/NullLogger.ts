@@ -1,16 +1,22 @@
 import { Logger } from "./Logger";
 
 export const NullLogger: Logger = {
-    debug: function (...data: any[]): void {        
+    debug: function (): void {        
+         // do nothing.
     },
-    error: function (...data: any[]): void {
+    error: function (): void {
+         // do nothing.
     },
-    info: function (...data: any[]): void {
+    info: function (): void {
+         // do nothing.
     },
-    log: function (...data: any[]): void {
+    log: function (): void {
+         // do nothing.
     },
-    trace: function (...data: any[]): void {
+    trace: function (): void {
+         // do nothing.
     },
-    warn: function (...data: any[]): void {
+    warn: function (): void {
+         // do nothing.
     }
 }
