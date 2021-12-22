@@ -1,6 +1,8 @@
+import { DispatchOptions } from "./DispatchOptions";
 import { DOMEvent } from "./DOMEvent";
 import { BindToDOMEventOptions } from "./options/BindToDOMEventOptions";
 import { DefaultBindToDOMEventsOptions } from "./options/DefaultBindToDOMEventsOptions";
+import { DefaultDispatchOptions } from "./options/DefaultDispatchOptions";
 import { DefaultUnbindToDOMEventsOptions } from "./options/DefaultUnbindToDomEventsOptions";
 import { OptionsMapper } from "./options/OptionsMapper";
 import { UnbindToDOMEventOptions } from "./options/UnbindToDOMEventOptions";
@@ -10,8 +12,13 @@ export class OSDomEventListener extends OSEventListener{
     #boundedDomEvents: DOMEvent[] = [];
     #attachedDomElements : EventTarget[]=  [];
 
-    dispatch(sender: any, data: any): void {
-        super.dispatch(sender, data);
+    /**
+     * @param {any} sender 
+     * @param {any} data 
+     * @param {DispatchOptions} [options = DefaultDispatchOptions] 
+     */
+    dispatch(sender: any, data: any, options: DispatchOptions = DefaultDispatchOptions): void {
+        super.dispatch(sender, data, );
         const event = new CustomEvent(this.name, {
             detail: {
                 sender: sender,
@@ -71,7 +78,7 @@ export class OSDomEventListener extends OSEventListener{
         if (i !== -1){
             const boundedEvent = this.#boundedDomEvents[i];
             element.removeEventListener(eventName, boundedEvent.eventHandler, options);
-            this.#boundedDomEvents = this.#boundedDomEvents.splice(i, 1);
+            this.#boundedDomEvents.splice(i, 1);
             return true;
         } else {
             const errorMessage = 'An attempt to unbound a non bounded dom event occurred';
@@ -93,7 +100,7 @@ export class OSDomEventListener extends OSEventListener{
     detachFromDOMElement(element: EventTarget){
         const i = this.#attachedDomElements.indexOf(element);
         if (i !== -1){
-            this.#attachedDomElements = this.#attachedDomElements.splice(i, 1);
+            this.#attachedDomElements.splice(i, 1);
         }
     }
 }

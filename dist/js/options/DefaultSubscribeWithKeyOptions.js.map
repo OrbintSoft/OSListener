@@ -1,0 +1,1 @@
+{"version":3,"file":"DefaultSubscribeWithKeyOptions.js","sourceRoot":"","sources":["../../../src/options/DefaultSubscribeWithKeyOptions.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,uBAAuB,EAAE,MAAM,2BAA2B,CAAC;AAGpE,MAAM,CAAC,MAAM,8BAA8B,GAA4B;IACnE,6BAA6B,EAAE,IAAI;IACnC,iBAAiB,EAAE,uBAAuB,CAAC,iBAAiB;IAC5D,kCAAkC,EAAE,uBAAuB,CAAC,kCAAkC;CACjG,CAAC"}

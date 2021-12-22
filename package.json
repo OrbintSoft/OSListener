@@ -4,7 +4,7 @@
     },
     "scripts": {
         "eslint" : "eslint src",
-        "compileTs": "tsc src/OSEventListener.ts"
+        "compileTs": "tsc --project ./src/tsconfig.json"
     },
     "devDependencies": {
         "eslint": "^8.5.0",
